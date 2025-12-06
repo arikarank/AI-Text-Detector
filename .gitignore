@@ -32,8 +32,7 @@ Thumbs.db
 instance/
 
 # Machine learning model and tokenizer (large files)
-*.h5
-tokenizer.pkl
+# Note: ai_detection_lstm_model.h5 and tokenizer.pkl are tracked in the repository
 
 # Database files
 *.db

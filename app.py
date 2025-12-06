@@ -1,35 +1,38 @@
-from flask import Flask, render_template, request, jsonify, redirect, url_for, flash
+from flask import Flask, render_template, request, jsonify, redirect, url_for, session, flash
 from flask_sqlalchemy import SQLAlchemy
 from flask_bcrypt import Bcrypt
-from flask_login import (
-    LoginManager,
-    UserMixin,
-    login_user,
-    login_required,
-    logout_user,
-    current_user,
-)
+from flask_login import LoginManager, UserMixin, login_user, login_required, logout_user, current_user
 import pickle
 import numpy as np
 from tensorflow.keras.models import load_model
 from keras.preprocessing.sequence import pad_sequences
+import os  # 👈 add this
 
 app = Flask(__name__)
-
-# --- Config ---
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///users.db'
-app.config['SECRET_KEY'] = 'your_secret_key'  # change this in real deployment
+app.config['SECRET_KEY'] = 'your_secret_key'
 
 db = SQLAlchemy(app)
 bcrypt = Bcrypt(app)
 login_manager = LoginManager(app)
 login_manager.login_view = 'login'
 
-# --- Load LSTM model and tokenizer ---
-# Make sure these files exist in the project root on Render as well
-model = load_model('ai_detection_lstm_model.h5')
-with open('tokenizer.pkl', 'rb') as file:
+# Ensure tables exist (for Render / gunicorn)
+with app.app_context():
+    db.create_all()
+
+# Base directory (where app.py is located)
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+
+# Build absolute paths to model + tokenizer
+MODEL_PATH = os.path.join(BASE_DIR, 'ai_detection_lstm_model.h5')
+TOKENIZER_PATH = os.path.join(BASE_DIR, 'tokenizer.pkl')
+
+# Load LSTM model and tokenizer
+model = load_model(MODEL_PATH)
+with open(TOKENIZER_PATH, 'rb') as file:
     tokenizer = pickle.load(file)
+
 
 MAXLEN = 100  # Same as training
 

@@ -1,0 +1,39 @@
+# Byte-compiled / cache
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Virtual environments
+venv/
+env/
+.env
+.venv/
+
+# VS Code / JetBrains
+.vscode/
+.idea/
+
+# Distribution / packaging
+*.egg-info/
+dist/
+build/
+
+# Jupyter
+.ipynb_checkpoints
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+
+# Flask instance folder
+instance/
+
+# Machine learning model and tokenizer (large files)
+*.h5
+tokenizer.pkl
+
+# Database files
+*.db

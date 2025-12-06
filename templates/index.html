@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+{% block title %}Home · AI Text Detector{% endblock %}
+
+{% block content %}
+<div class="card">
+    <div class="card-header">
+        <h1 class="card-title">AI vs Human Text Detector</h1>
+        <p class="card-subtitle">
+            Log in, paste any text, and instantly see whether it looks more like
+            <strong>AI-generated</strong> or <strong>human-written</strong>.
+        </p>
+    </div>
+    <div class="card-body">
+        {% if not current_user.is_authenticated %}
+            <button class="btn btn-primary btn-full" onclick="window.location.href='{{ url_for(&quot;login&quot;) }}'">
+                Login to start
+            </button>
+            <button class="btn btn-outline btn-full" style="margin-top: 0.5rem;"
+                    onclick="window.location.href='{{ url_for(&quot;register&quot;) }}'">
+                Create an account
+            </button>
+        {% else %}
+            <button class="btn btn-primary btn-full" onclick="window.location.href='{{ url_for(&quot;predict_page&quot;) }}'">
+                Go to Detector
+            </button>
+        {% endif %}
+        <p class="text-muted" style="margin-top: 1rem;">
+            This tool uses an LSTM-based model to classify text as AI-style or human-style based on how it’s written.
+        </p>
+    </div>
+</div>
+{% endblock %}

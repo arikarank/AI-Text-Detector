@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+{% block title %}Login · AI Text Detector{% endblock %}
+
+{% block content %}
+<div class="card">
+    <div class="card-header">
+        <h1 class="card-title">Welcome back</h1>
+        <p class="card-subtitle">Log in to access the AI text detector.</p>
+    </div>
+    <div class="card-body">
+        <form method="POST" action="{{ url_for('login') }}">
+            <div class="form-group">
+                <label class="form-label" for="username">Username</label>
+                <input class="form-input" id="username" name="username" type="text" required />
+            </div>
+
+            <div class="form-group">
+                <label class="form-label" for="password">Password</label>
+                <input class="form-input" id="password" name="password" type="password" required />
+            </div>
+
+            <button type="submit" class="btn btn-primary btn-full" style="margin-top: 0.75rem;">
+                Login
+            </button>
+        </form>
+
+        <p class="text-muted" style="margin-top: 1rem;">
+            Don’t have an account?
+            <a class="text-link" href="{{ url_for('register') }}">Register here</a>.
+        </p>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,70 @@
+{% extends "base.html" %}
+{% block title %}Detector · AI Text Detector{% endblock %}
+
+{% block content %}
+<div class="card">
+    <div class="card-header">
+        <h1 class="card-title">AI vs Human Text Classifier</h1>
+        <p class="card-subtitle">
+            Paste any text below and get an instant prediction.
+        </p>
+    </div>
+    <div class="card-body">
+        <div class="form-group">
+            <label class="form-label" for="textInput">Text</label>
+            <textarea id="textInput" class="form-textarea" placeholder="Paste or type your text here..."></textarea>
+        </div>
+
+        <button type="button" class="btn btn-primary btn-full" onclick="classifyText()">
+            Classify text
+        </button>
+
+        <div id="result" class="result-box" style="display: none; margin-top: 1rem;">
+            <span class="result-label" id="resultLabel"></span>
+            <span class="result-prob" id="resultProb"></span>
+        </div>
+
+        <p class="text-muted" style="margin-top: 1rem;">
+            Note: This is an experimental classifier based on writing style patterns,
+            not a guaranteed detector.
+        </p>
+    </div>
+</div>
+
+<script>
+    function classifyText() {
+        const textArea = document.getElementById("textInput");
+        const resultBox = document.getElementById("result");
+        const resultLabel = document.getElementById("resultLabel");
+        const resultProb = document.getElementById("resultProb");
+
+        const text = textArea.value.trim();
+
+        if (!text) {
+            alert("Please enter some text before classifying.");
+            return;
+        }
+
+        fetch("{{ url_for('predict') }}", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ text: text })
+        })
+        .then(async (response) => {
+            if (!response.ok) {
+                const data = await response.json().catch(() => ({}));
+                throw new Error(data.error || "Something went wrong while predicting.");
+            }
+            return response.json();
+        })
+        .then((data) => {
+            resultBox.style.display = "block";
+            resultLabel.textContent = `Prediction: ${data.prediction}`;
+            resultProb.textContent = `Estimated probability of AI: ${data.probability.toFixed(4)}`;
+        })
+        .catch((err) => {
+            alert(err.message || "Error occurred while contacting the server.");
+        });
+    }
+</script>
+{% endblock %}
